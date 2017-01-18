@@ -1,0 +1,46 @@
+# here is the current prod_ris site link
+$HCIROOT/p_ris --> /sites/5.6/p_ris/v01_2009.03.09
+
+# create physical directory for new cloned version of prod_ris(v1)
+mkdir /sites/5.6/prod_ris/v02_2011.10.26
+
+# clone prod_ris(v1) to prod_ris(v2) with our homegrown script
+tar_tar_dir.ksh /sites/5.6/p_ris/v01_2009.03.09 /sites/5.6/prod_ris/v02_2011.10.26
+
+# make prod_ris_new site link
+cd $HCIROOT
+ln -s /sites/5.6/prod_ris/v02_2011.10.26 prod_ris_new
+
+#now the site links look like this
+$HCIROOT/p_ris --> /sites/5.6/p_ris/v01_2009.03.09
+$HCIROOT/p_ris_new --> /sites/5.6/p_ris/v02_2011.10.26
+
+# make changes to prod_ris_new and test with our mock site methodology
+
+# when ready to golive shutdown prod_ris site
+# redo site links
+cd $HCIROOT
+mv prod_ris prod_ris_old
+mv prod_ris_new prod_ris
+
+#udate IDE entires by running our homegrown script
+set_server_ini_environs.ksh
+
+#now the site links look like this
+$HCIROOT/p_ris_old --> /sites/5.6/p_ris/v01_2009.03.09
+$HCIROOT/p_ris --> /sites/5.6/p_ris/v02_2011.10.26
+
+# startup site prod_ris that now points to version 2 with your changes
+
+# if back out is needed then shutdown prod_ris that is running version 2
+# reset the site links like this
+cd $HCIROOT
+rm prod_ris
+mv prod_ris_old prod_ris
+
+# now your site links are back to what you started with before any changes
+$HCIROOT/p_ris --> /sites/5.6/p_ris/v01_2009.03.09
+
+# start up the prod_ris site that now points to version 1
+# and you are back to exactly what you had before ever making any changes, 
+# without even having to figure out how to get back to what you had since version 1 was never changed
